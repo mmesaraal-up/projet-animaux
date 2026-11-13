@@ -4,14 +4,11 @@ from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="App sécurisée", page_icon="🔒")
 
-# --- 1. INITIALISATION DE LA SESSION ---
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 if "username" not in st.session_state:
     st.session_state["username"] = ""
 
-
-# --- 2. VÉRIFICATION DES IDENTIFIANTS ---
 @st.cache_data
 def load_accounts():
     return pd.read_csv("accounts.csv")
@@ -26,7 +23,7 @@ def authenticate(username_input, password_input):
     return not match.empty
 
 
-# --- 3. AFFICHAGE CONDITIONNEL ---
+
 if not st.session_state["logged_in"]:
     st.title("🔒 Connexion à l'Application")
     st.subheader("Veuillez vous identifier pour accéder au contenu")
@@ -60,16 +57,19 @@ else:
         st.title("🏠 Page d'Accueil Réservée")
         st.write("Ce contenu est uniquement accessible aux utilisateurs authentifiés.")
 
-    elif selected_page == "Galerie Photos":
+   elif selected_page == "Galerie Photos":
         st.title("🐾 Galerie Photos")
-        st.write("Voici la galerie organisée sur 3 colonnes :")
+        st.write("Voici la galerie avec mes animaux :")
 
-        images = [
-            "images/90025a2f483f1f4230464b03a61b5d77.jpg",
-            "images/chat-mangeant-du-poisson-griffonne_79603-534.avif",
-            "images/husky.jpg",
+        photos = [
+            {"fichier": "images/90025a2f483f1f4230464b03a61b5d77.jpg", "legende": "Mon chien développeur"},
+            {"fichier": "images/chat-mangeant-du-poisson-griffonne_79603-534.avif", "legende": "Le chat et le poisson"},
+            {"fichier": "images/husky.jpg", "legende": "Husky de Noël"},
+            {"fichier": "images/quokka.jpg", "legende": "Quokka"},
+            {"fichier": "images/Rock'n Roll.jpg", "legende": "Rock'n Roll"},
         ]
+
         cols = st.columns(3)
-        for idx, img_url in enumerate(images):
+        for idx, photo in enumerate(photos):
             with cols[idx % 3]:
-                st.image(img_url, caption=f"Chat {idx + 1}", use_container_width=True)
+                st.image(photo["fichier"], caption=photo.get("legende"), use_container_width=True)
